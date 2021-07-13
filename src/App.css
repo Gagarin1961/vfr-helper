@@ -1,0 +1,17 @@
+:root {
+  --dark-blue: #183251; /*primary*/
+  --cyan: #597f97; /*secondary*/
+  --light-blue: #c4cbd8; /*???*/
+  --grey: #6c747c; /*disabled*/
+  --cream: #c8c4c4; /*second white*/
+  --black: #29281c; /*black*/
+  --white: #fbfbfb; /*white*/
+}
+
+#root {
+  height: 100%;
+}
+
+.main {
+  height: calc(100% - 64px);
+}
