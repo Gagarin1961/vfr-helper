@@ -47,8 +47,10 @@ const theme = createTheme({
                 color: "#29281c",
             }
         },
-        MuiButton: {
-
+        MuiAccordion: {
+            root: {
+                color: "#29281c",
+            }
         }
     }
 })

@@ -1,7 +1,8 @@
 import React, {useState} from "react";
 
 import { makeStyles } from '@material-ui/core/styles';
-import {Divider, Grid, Typography} from "@material-ui/core";
+import {Accordion, AccordionDetails, AccordionSummary, Divider, Grid, Typography} from "@material-ui/core";
+import {ChevronLeft} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
     header: {
@@ -12,7 +13,10 @@ const useStyles = makeStyles((theme) => ({
     },
     selectedStep: {
         padding: '10px 10px',
-        backgroundColor: '#c4cbd8',
+        backgroundColor: '#597f97',
+    },
+    accordionDetails: {
+        padding: '10px 0',
     }
 }));
 
@@ -28,32 +32,60 @@ const Summary = ({ steps, currentStep }) => {
             {steps.map((step, index) => {
                 return (
                     <div className={index === currentStep ? classes.selectedStep : classes.step}>
-                        <Grid container direction="column">
-                            <Grid item container xs={12}>
-                                <Grid item xs={6}>
-                                    <Typography noWrap>
-                                        {"Etape " + (index + 1) + " :"}
-                                    </Typography>
+                        <Accordion expanded={index === currentStep}>
+                            <AccordionSummary expandIcon={<ChevronLeft />}>
+                                <Grid container>
+                                    <Grid item xs={5}>
+                                        <Typography noWrap>
+                                            {"Etape " + (index + 1) + " :"}
+                                        </Typography>
+                                    </Grid>
+                                    <Grid item xs={6} align="right">
+                                        <Typography noWrap>
+                                            {step.departure + " -> " + step.arrival}
+                                        </Typography>
+                                    </Grid>
                                 </Grid>
-                                <Grid item xs={6} align={"center"}>
-                                    <Typography noWrap>
-                                        {step.departure + " -> " + step.arrival}
-                                    </Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <Grid container spacing={2} direction="column">
+                                    <Grid container item spacing={1} alignItems="center">
+                                        <Grid item xs={4}>
+                                            <Typography>
+                                                {step.distance + "NM"}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={4} align="center">
+                                            <Typography>
+                                                {"TSV : " + step.timeWithoutWind + " Minutes"}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={4} align="right">
+                                            <Typography>
+                                                {"TAV : " + step.timeWithWind + " Minutes"}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
+                                    <Grid container item spacing={1} alignItems="center">
+                                        <Grid item xs={4}>
+                                            <Typography>
+                                                {"Route: " + step.route + "°"}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={4} align="center">
+                                            <Typography>
+                                                {"Cap : " + step.heading + "°"}
+                                            </Typography>
+                                        </Grid>
+                                        <Grid item xs={4} align="right">
+                                            <Typography>
+                                                {"Altitude : " + step.altitude}
+                                            </Typography>
+                                        </Grid>
+                                    </Grid>
                                 </Grid>
-                            </Grid>
-                            <Grid item container xs={12}>
-                                <Grid item xs={4} align="center">
-                                    <Typography noWrap>
-                                        {step.distance + "NM"}
-                                    </Typography>
-                                </Grid>
-                                <Grid item xs={8} align="center">
-                                    <Typography noWrap>
-                                        {"TSV : " + step.timeWithoutWind + " Minutes"}
-                                    </Typography>
-                                </Grid>
-                            </Grid>
-                        </Grid>
+                            </AccordionDetails>
+                        </Accordion>
                     </div>
                 );
             })}

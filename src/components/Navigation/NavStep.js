@@ -183,7 +183,8 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
             windDirection: windDirection,
             windSpeed: windSpeed,
             timeWithoutWind: timeWithoutWind(speed, distance, 1),
-            timeWithWind: timeWithWind(speed, distance, 1),
+            timeWithWind: timeWithWind(speed, distance, route, windSpeed, windDirection, 1),
+            heading: heading(windSpeed, speed, route, windDirection),
         };
         if (steps.length <= currentStep + 1) {
             setDeparture("");
@@ -266,7 +267,7 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
             <Grid container className={classes.header}>
                 <Grid item xs={4} align="left">
                     <Button
-                        color="primary"
+                        color="secondary"
                         variant="outlined"
                         disabled={currentStep === 0}
                         startIcon={<ArrowBack />}
@@ -285,7 +286,7 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
                 </Grid>
                 <Grid item xs={4} align="right">
                     <Button
-                        color="primary"
+                        color="secondary"
                         variant="outlined"
                         endIcon={<ArrowForward />}
                         onClick={handleNextClick}
