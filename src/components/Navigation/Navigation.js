@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 
 import { makeStyles } from '@material-ui/core/styles';
 import {Grid, Paper} from "@material-ui/core";
@@ -20,10 +20,6 @@ const Navigation = () => {
 
     const [steps, setSteps] = useState([]);
     const [currentStep, setCurrentStep] = useState(0);
-
-    useEffect(() => {
-        console.log(currentStep, steps.length);
-    }, [currentStep, steps]);
 
     return (
         <Grid container justify="center" direction="column" className={classes.container}>

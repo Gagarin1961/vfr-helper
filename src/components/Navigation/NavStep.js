@@ -28,6 +28,7 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
     const [route, setRoute] = useState("");
     const [windDirection, setWindDirection] = useState("")
     const [windSpeed, setWindSpeed] = useState("");
+    const [wind, setWind] = useState("");
 
     const [speedError, setSpeedError] = useState(false);
     const [departureError, setDepartureError] = useState(false);
@@ -140,7 +141,7 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
         if (windSpeed === "" && windDirection === "")
             return;
         checkWindValid();
-    }, [windSpeed, windDirection]);
+    }, [wind]);
 
     const checkWindValid = () => {
         const parsedDirection = Number(windDirection);
@@ -154,6 +155,7 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
     }
 
     const handleWindChange = (event) => {
+        setWind(event.target.value);
         const slashIndex = event.target.value.indexOf('/');
         if (slashIndex === -1 || slashIndex < 1 || slashIndex > 3)
             return;
@@ -200,6 +202,7 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
             setRoute(route);
             setWindDirection(windDirection);
             setWindSpeed(windSpeed);
+            setWind(windDirection + "/" + windSpeed);
         }
         if (steps.length > currentStep) {
             newSteps[currentStep] = newEntry;
@@ -231,6 +234,7 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
         setRoute(route);
         setWindDirection(windDirection);
         setWindSpeed(windSpeed);
+        setWind(windDirection + "/" + windSpeed);
         setCurrentStep(currentStep - 1);
     }
 
@@ -300,6 +304,7 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
                                 label="Vitesse propre (kt)"
                                 variant="outlined"
                                 size="small"
+                                value={speed}
                                 error={speedError}
                                 onChange={handleSpeedChange}
                             />
@@ -310,6 +315,7 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
                                 label="Vent (direction/force)"
                                 variant="outlined"
                                 size="small"
+                                value={wind}
                                 error={windError}
                                 onChange={handleWindChange}
                             />
@@ -376,22 +382,22 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
                     </Grid>
                     <Grid item container spacing={4} justify="center" alignItems="center" className={classes.grid}>
                         <Grid item xs={2} align="center">
-                            <Typography noWrap>
+                            <Typography>
                                 {checkDisplayBaseFactor() ? "Fb: " + baseFactor(speed, 3) : "Fb: 0"}
                             </Typography>
                         </Grid>
                         <Grid item xs={2} align="center">
-                            <Typography noWrap>
+                            <Typography>
                                 {"Cap: " + (checkDisplayHeading() ? heading(windSpeed, speed, route, windDirection) : "?") + "°"}
                             </Typography>
                         </Grid>
                         <Grid item xs={4} align="center">
-                            <Typography noWrap>
+                            <Typography>
                                 {"Temps sans vent: " + (checkDisplayTimeWithoutWind() ? timeWithoutWind(speed, distance,1) : "?") + " minutes"}
                             </Typography>
                         </Grid>
                         <Grid item xs={4} align="center">
-                            <Typography noWrap>
+                            <Typography>
                                 {"Temps avec vent: " + (checkDisplayTimeWithWind() ? timeWithWind(speed, distance, route, windSpeed, windDirection, 1) : "?") + " minutes"}
                             </Typography>
                         </Grid>

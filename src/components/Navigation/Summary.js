@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
     },
     selectedStep: {
         padding: '10px 10px',
-        backgroundColor: theme.palette.secondary.light,
+        backgroundColor: '#c4cbd8',
     }
 }));
 

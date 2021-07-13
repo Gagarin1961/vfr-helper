@@ -3,24 +3,13 @@ const toRadians = (angle) => {
 }
 
 const getAlphaAngle = (route, windDirection) => {
-    let angle = Math.abs(route - windDirection);
-    if (angle >= 180) {
-        angle = 360 - angle;
-    }
-    else if (angle <= -180) {
-        angle = 360 + angle
-    }
-    console.log("alpha", angle);
-    return angle;
+    return windDirection - route;
 }
 
 const getEffectiveWind = (route, windSpeed, windDirection) => {
     let angle = getAlphaAngle(route, windDirection);
     angle = toRadians(angle);
-    console.log("radians", angle);
-    console.log("cos", Math.cos(angle));
-    console.log("Ve", Math.floor(windSpeed * -Math.cos(angle)));
-    return Math.floor(windSpeed * -Math.cos(angle));
+    return Math.round(windSpeed * -Math.cos(angle));
 }
 
 const getMaxDrift = (windSpeed, baseFactor) => {
@@ -28,7 +17,7 @@ const getMaxDrift = (windSpeed, baseFactor) => {
 }
 
 const getDrift = (windSpeed, baseFactor, route, windDirection) => {
-    return Math.floor(getMaxDrift(windSpeed, baseFactor) * Math.sin(toRadians(getAlphaAngle(route, windDirection))));
+    return Math.round(getMaxDrift(windSpeed, baseFactor) * Math.sin(toRadians(getAlphaAngle(route, windDirection))));
 }
 
 export const baseFactor = (speed, trailingZeros) => {
@@ -40,11 +29,8 @@ export const timeWithoutWind = (speed, distance, trailingZeros) => {
 }
 
 export const timeWithWind = (speed, distance, route, windSpeed, windDirection, trailingZeros) => {
-    console.log("wind direction", windDirection);
-    console.log("wind speed", windSpeed);
     speed = parseInt(speed);
     speed += getEffectiveWind(route, windSpeed, windDirection);
-    console.log("speed", speed);
     return parseFloat((60 / speed * distance).toFixed(trailingZeros))
 }
 
