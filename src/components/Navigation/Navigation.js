@@ -31,7 +31,10 @@ const Navigation = () => {
                 <Grid item container xs={3} alignContent="center">
                     <Grid item xs={12}>
                         <Paper className={classes.paper}>
-                            <Summary steps={steps}/>
+                            <Summary
+                                steps={steps}
+                                currentStep={currentStep}
+                            />
                         </Paper>
                     </Grid>
                 </Grid>

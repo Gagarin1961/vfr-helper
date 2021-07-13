@@ -1,11 +1,13 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, {useEffect, useState} from "react";
 
 import { makeStyles } from '@material-ui/core/styles';
 import {Divider, Grid, Typography, TextField, Button} from "@material-ui/core";
+import {baseFactor, timeWithoutWind, timeWithWind, heading} from "../Calculator/Operations";
+import {ArrowBack, ArrowForward} from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
     header: {
-        padding: '5px 10px',
+        padding: '15px 10px',
     },
     step: {
         padding: '5px 10px',
@@ -81,6 +83,12 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
         setArrival(event.target.value);
     }
 
+    useEffect(() => {
+        if (distance === "")
+            return;
+        checkDistanceValid();
+    }, [distance]);
+
     const checkDistanceValid = () => {
         const parsed = Number(distance);
         if (isNaN(parsed) || parsed < 1 || parsed >= 10000) {
@@ -108,6 +116,12 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
         setAltitude(event.target.value);
     }
 
+    useEffect(() => {
+        if (route === "")
+            return;
+        checkRouteValid();
+    }, [route]);
+
     const checkRouteValid = () => {
         const parsed = Number(route);
         if (isNaN(parsed) || parsed < 0 || parsed > 360) {
@@ -121,6 +135,12 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
     const handleRouteChange = (event) => {
         setRoute(event.target.value);
     }
+
+    useEffect(() => {
+        if (windSpeed === "" && windDirection === "")
+            return;
+        checkWindValid();
+    }, [windSpeed, windDirection]);
 
     const checkWindValid = () => {
         const parsedDirection = Number(windDirection);
@@ -160,8 +180,8 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
             route: route,
             windDirection: windDirection,
             windSpeed: windSpeed,
-            timeWithoutWind: parseFloat((60 / speed * distance).toFixed(1)),
-            timeWithWind: parseFloat((60 / speed * distance).toFixed(1)),
+            timeWithoutWind: timeWithoutWind(speed, distance, 1),
+            timeWithWind: timeWithWind(speed, distance, 1),
         };
         if (steps.length <= currentStep + 1) {
             setDeparture("");
@@ -214,11 +234,62 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
         setCurrentStep(currentStep - 1);
     }
 
+    const handleFinishClick = () => {
+        if (!checkEntries())
+            return;
+    }
+
+    const checkDisplayBaseFactor = () => {
+        return !speedError && speed !== "";
+    }
+
+    const checkDisplayTimeWithoutWind = () => {
+        return !speedError && speed !== "" && !distanceError && distance !== "";
+    }
+
+    const checkDisplayTimeWithWind = () => {
+        return !speedError && speed !== "" && !distanceError && distance !== ""
+            && !routeError && route !== "" && !windError && windSpeed !== "" && windDirection !== "";
+    }
+
+    const checkDisplayHeading = () => {
+        return !speedError && speed !== "" && !routeError && route !== ""
+            && !windError && windSpeed !== "" && windDirection !== "";
+    }
+
     return (
         <div>
-            <div className={classes.header}>
-                <Typography variant="h6" align="center">Configuration de l'étape</Typography>
-            </div>
+            <Grid container className={classes.header}>
+                <Grid item xs={4} align="left">
+                    <Button
+                        color="primary"
+                        variant="outlined"
+                        disabled={currentStep === 0}
+                        startIcon={<ArrowBack />}
+                        onClick={handlePreviousClick}
+                    >
+                        Précédent
+                    </Button>
+                </Grid>
+                <Grid item xs={4} align="center">
+                    <Typography
+                        variant="h6"
+                        align="center"
+                    >
+                        {"Configuration d'étape (" + (currentStep + 1) + "/" + (steps.length + (currentStep === steps.length ? 1 : 0)) + ")"}
+                    </Typography>
+                </Grid>
+                <Grid item xs={4} align="right">
+                    <Button
+                        color="primary"
+                        variant="outlined"
+                        endIcon={<ArrowForward />}
+                        onClick={handleNextClick}
+                    >
+                        Suivant
+                    </Button>
+                </Grid>
+            </Grid>
             <Divider variant="middle"/>
             <div className={classes.step}>
                 <Grid container direction="column">
@@ -272,12 +343,12 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
                         <Grid item xs={4} align="center">
                             <TextField
                                 id="standard-basic"
-                                label="Altitude (ft)"
+                                label="Distance (NM)"
                                 variant="outlined"
                                 size="small"
-                                value={altitude}
-                                error={altitudeError}
-                                onChange={handleAltitudeChange}
+                                value={distance}
+                                error={distanceError}
+                                onChange={handleDistanceChange}
                             />
                         </Grid>
                         <Grid item xs={4} align="center">
@@ -294,62 +365,43 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
                         <Grid item xs={4} align="center">
                             <TextField
                                 id="standard-basic"
-                                label="Distance (NM)"
+                                label="Altitude (ft)"
                                 variant="outlined"
                                 size="small"
-                                value={distance}
-                                error={distanceError}
-                                onChange={handleDistanceChange}
+                                value={altitude}
+                                error={altitudeError}
+                                onChange={handleAltitudeChange}
                             />
                         </Grid>
                     </Grid>
                     <Grid item container spacing={4} justify="center" alignItems="center" className={classes.grid}>
                         <Grid item xs={2} align="center">
                             <Typography noWrap>
-                                {!speedError && speed !== "" ? "Fb: " + parseFloat((60 / speed).toFixed(3)) : "Fb: 0"}
+                                {checkDisplayBaseFactor() ? "Fb: " + baseFactor(speed, 3) : "Fb: 0"}
                             </Typography>
                         </Grid>
                         <Grid item xs={2} align="center">
                             <Typography noWrap>
-                                {"Cap: 175°"}
+                                {"Cap: " + (checkDisplayHeading() ? heading(windSpeed, speed, route, windDirection) : "?") + "°"}
                             </Typography>
                         </Grid>
                         <Grid item xs={4} align="center">
                             <Typography noWrap>
-                                {"Temps sans vent: " + (speed && distance ? parseFloat((60 / speed * distance).toFixed(1)) : "?") + " minutes"}
+                                {"Temps sans vent: " + (checkDisplayTimeWithoutWind() ? timeWithoutWind(speed, distance,1) : "?") + " minutes"}
                             </Typography>
                         </Grid>
                         <Grid item xs={4} align="center">
                             <Typography noWrap>
-                                {"Temps avec vent: " + (speed && distance ? parseFloat((60 / speed * distance).toFixed(1)) : "?") + " minutes"}
+                                {"Temps avec vent: " + (checkDisplayTimeWithWind() ? timeWithWind(speed, distance, route, windSpeed, windDirection, 1) : "?") + " minutes"}
                             </Typography>
                         </Grid>
                     </Grid>
                     <Grid item container justify="center" alignItems="center" className={classes.grid}>
-                        <Grid item xs={2} align="center">
+                        <Grid item xs={4} align="center">
                             <Button
                                 color="primary"
                                 variant="contained"
-                                disabled={currentStep === 0}
-                                onClick={handlePreviousClick}
-                            >
-                                Précédent
-                            </Button>
-                        </Grid>
-                        <Grid item xs={6} align="center" />
-                        <Grid item xs={2} align="center">
-                            <Button
-                                color="primary"
-                                variant="contained"
-                                onClick={handleNextClick}
-                            >
-                                Suivant
-                            </Button>
-                        </Grid>
-                        <Grid item xs={2} align="center">
-                            <Button
-                                color="primary"
-                                variant="contained"
+                                onClick={handleFinishClick}
                             >
                                 Terminé
                             </Button>

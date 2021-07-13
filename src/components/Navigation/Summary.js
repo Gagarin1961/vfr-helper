@@ -5,38 +5,19 @@ import {Divider, Grid, Typography} from "@material-ui/core";
 
 const useStyles = makeStyles((theme) => ({
     header: {
-        padding: '5px 10px',
+        padding: '15px 10px',
     },
     step: {
-        padding: '5px 10px',
+        padding: '10px 10px',
+    },
+    selectedStep: {
+        padding: '10px 10px',
+        backgroundColor: theme.palette.secondary.light,
     }
 }));
 
-const Summary = ({ steps }) => {
+const Summary = ({ steps, currentStep }) => {
     const classes = useStyles();
-
-    /*const [steps, setSteps] = useState([
-        {
-            src: "LFPN",
-            dst: "RBT",
-            distance: "15",
-            time: "8",
-            altitude: "1500"
-        },
-        {
-            src: "RBT",
-            dst: "Ablis",
-            distance: "23",
-            time: "12",
-            altitude: "2500"
-        },
-        {
-            src: "Ablis",
-            dst: "Chartres",
-            distance: "9",
-            time: "5",
-            altitude: "2000"
-        }]);*/
 
     return (
         <div>
@@ -46,7 +27,7 @@ const Summary = ({ steps }) => {
             <Divider variant="middle"/>
             {steps.map((step, index) => {
                 return (
-                    <div className={classes.step}>
+                    <div className={index === currentStep ? classes.selectedStep : classes.step}>
                         <Grid container direction="column">
                             <Grid item container xs={12}>
                                 <Grid item xs={6}>
@@ -54,7 +35,7 @@ const Summary = ({ steps }) => {
                                         {"Etape " + (index + 1) + " :"}
                                     </Typography>
                                 </Grid>
-                                <Grid item xs={6} align={"right"}>
+                                <Grid item xs={6} align={"center"}>
                                     <Typography noWrap>
                                         {step.departure + " -> " + step.arrival}
                                     </Typography>
