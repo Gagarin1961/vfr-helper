@@ -24,16 +24,17 @@ const Navigation = () => {
     return (
         <Grid container justify="center" direction="column" className={classes.container}>
             <Grid item container justify="space-evenly">
-                <Grid item container xs={3} alignContent="center">
+                {steps.length > 0 && <Grid item container xs={3} alignContent="center">
                     <Grid item xs={12}>
                         <Paper className={classes.paper}>
                             <Summary
                                 steps={steps}
                                 currentStep={currentStep}
+                                setCurrentStep={setCurrentStep}
                             />
                         </Paper>
                     </Grid>
-                </Grid>
+                </Grid>}
                 <Grid item container xs={7} alignContent="center">
                     <Grid item xs={12}>
                         <Paper className={classes.paper}>

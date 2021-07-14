@@ -169,6 +169,28 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
             && checkAltitudeValid() && checkRouteValid() && checkWindValid();
     }
 
+    useEffect(() => {
+        if (steps.length <= currentStep) {
+            setDeparture("");
+            setArrival("");
+            setDistance("");
+            setAltitude("");
+            setRoute("");
+        }
+        else {
+            const { speed, departure, arrival, distance, altitude, route, windSpeed, windDirection } = steps[currentStep];
+            setSpeed(speed)
+            setDeparture(departure);
+            setArrival(arrival);
+            setDistance(distance);
+            setAltitude(altitude);
+            setRoute(route);
+            setWindDirection(windDirection);
+            setWindSpeed(windSpeed);
+            setWind(windDirection + "/" + windSpeed);
+        }
+    }, [currentStep]);
+
     const handleNextClick = () => {
         if (!checkEntries())
             return;
@@ -186,25 +208,6 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
             timeWithWind: timeWithWind(speed, distance, route, windSpeed, windDirection, 1),
             heading: heading(windSpeed, speed, route, windDirection),
         };
-        if (steps.length <= currentStep + 1) {
-            setDeparture("");
-            setArrival("");
-            setDistance("");
-            setAltitude("");
-            setRoute("");
-        }
-        else {
-            const { speed, departure, arrival, distance, altitude, route, windSpeed, windDirection } = steps[currentStep + 1];
-            setSpeed(speed)
-            setDeparture(departure);
-            setArrival(arrival);
-            setDistance(distance);
-            setAltitude(altitude);
-            setRoute(route);
-            setWindDirection(windDirection);
-            setWindSpeed(windSpeed);
-            setWind(windDirection + "/" + windSpeed);
-        }
         if (steps.length > currentStep) {
             newSteps[currentStep] = newEntry;
             setSteps(newSteps);
@@ -226,16 +229,6 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
         setAltitudeError(false);
         setRouteError(false);
         setWindError(false);
-        const { speed, departure, arrival, distance, altitude, route, windSpeed, windDirection } = steps[currentStep - 1];
-        setSpeed(speed)
-        setDeparture(departure);
-        setArrival(arrival);
-        setDistance(distance);
-        setAltitude(altitude);
-        setRoute(route);
-        setWindDirection(windDirection);
-        setWindSpeed(windSpeed);
-        setWind(windDirection + "/" + windSpeed);
         setCurrentStep(currentStep - 1);
     }
 

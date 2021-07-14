@@ -20,8 +20,12 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const Summary = ({ steps, currentStep }) => {
+const Summary = ({ steps, currentStep, setCurrentStep }) => {
     const classes = useStyles();
+
+    const handleAccordionClick = (index) => {
+        setCurrentStep(index === currentStep ? steps.length : index);
+    }
 
     return (
         <div>
@@ -32,7 +36,7 @@ const Summary = ({ steps, currentStep }) => {
             {steps.map((step, index) => {
                 return (
                     <div className={index === currentStep ? classes.selectedStep : classes.step}>
-                        <Accordion expanded={index === currentStep}>
+                        <Accordion expanded={index === currentStep} onChange={() => handleAccordionClick(index)}>
                             <AccordionSummary expandIcon={<ChevronLeft />}>
                                 <Grid container>
                                     <Grid item xs={5}>
