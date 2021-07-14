@@ -20,34 +20,43 @@ const Navigation = () => {
 
     const [steps, setSteps] = useState([]);
     const [currentStep, setCurrentStep] = useState(0);
+    const [finished, setFinished] = useState(false);
 
     return (
         <Grid container justify="center" direction="column" className={classes.container}>
-            <Grid item container justify="space-evenly">
-                {steps.length > 0 && <Grid item container xs={3} alignContent="center">
-                    <Grid item xs={12}>
-                        <Paper className={classes.paper}>
-                            <Summary
-                                steps={steps}
-                                currentStep={currentStep}
-                                setCurrentStep={setCurrentStep}
-                            />
-                        </Paper>
+            {
+                finished ?
+                    <Grid item container justify="space-evenly">
+                        Coucou
                     </Grid>
-                </Grid>}
-                <Grid item container xs={7} alignContent="center">
-                    <Grid item xs={12}>
-                        <Paper className={classes.paper}>
-                            <NavStep
-                                steps={steps}
-                                setSteps={setSteps}
-                                currentStep={currentStep}
-                                setCurrentStep={setCurrentStep}
-                            />
-                        </Paper>
+                    :
+                    <Grid item container justify="space-evenly">
+                        {steps.length > 0 && <Grid item container xs={3} alignContent="center">
+                            <Grid item xs={12}>
+                                <Paper className={classes.paper}>
+                                    <Summary
+                                        steps={steps}
+                                        currentStep={currentStep}
+                                        setCurrentStep={setCurrentStep}
+                                    />
+                                </Paper>
+                            </Grid>
+                        </Grid>}
+                        <Grid item container xs={7} alignContent="center">
+                            <Grid item xs={12}>
+                                <Paper className={classes.paper}>
+                                    <NavStep
+                                        steps={steps}
+                                        setSteps={setSteps}
+                                        currentStep={currentStep}
+                                        setCurrentStep={setCurrentStep}
+                                        setFinished={setFinished}
+                                    />
+                                </Paper>
+                            </Grid>
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Grid>
+            }
         </Grid>
     )
 }

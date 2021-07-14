@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
+const NavStep = ({ steps, setSteps, currentStep, setCurrentStep, setFinished }) => {
     const classes = useStyles();
 
     const [speed, setSpeed] = useState("");
@@ -235,6 +235,7 @@ const NavStep = ({ steps, setSteps, currentStep, setCurrentStep }) => {
     const handleFinishClick = () => {
         if (!checkEntries())
             return;
+        setFinished(true);
     }
 
     const checkDisplayBaseFactor = () => {
